@@ -13,6 +13,12 @@ import com.cab.book.model.Driver;
 import com.cab.book.model.GetAllDriversResponse;
 import com.cab.book.repository.DriverRepository;
 import com.cab.book.repository.DriverView;
+/**  
+* DriverServiceImpl.java - This is a service class which has all methods related to Driver. 
+* @author  Himanshu Shukla
+* @version 1.0 
+*/
+
 @Service
 public class DriverServiceImpl implements DriverService {
 	public static final Logger logger = LogManager.getLogger();
@@ -20,6 +26,11 @@ public class DriverServiceImpl implements DriverService {
 	@Lazy
 	DriverRepository driverRepository;
 	
+	/**
+	 * Retrieve list of all the available drivers.
+	 * 
+	 * @return GetAllDriversResponse
+	 */
 	@Override
 	public GetAllDriversResponse getAllDrivers() {
 		logger.info("*****DriverServiceImpl: inside getAllDrivers");

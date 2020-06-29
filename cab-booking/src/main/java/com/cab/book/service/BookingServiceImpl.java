@@ -17,6 +17,11 @@ import com.cab.book.model.GetAllBookingResponse;
 import com.cab.book.repository.BookingRepository;
 import com.cab.book.repository.DriverRepository;
 
+/**  
+* BookingServiceImpl.java - This is a service class which has all the booking related methods. 
+* @author  Himanshu Shukla
+* @version 1.0 
+*/
 @Service
 public class BookingServiceImpl implements BookingService {
 	public static final Logger logger = LogManager.getLogger();
@@ -30,18 +35,23 @@ public class BookingServiceImpl implements BookingService {
 	
 	Lock lock=new ReentrantLock();
 	 
+	/**
+	 * This method does the cab booking.
+	 * 1). Customer will send the request with Customer Name, Customer Latitude, Customer Longitude.
+	 * 2). Nearest available driver is fetched from Driver table.
+	 * 3). Details will be inserted in Order table (Customer Name, Customer Latitude, 
+	 *     Customer Longitude, Order Id, Driver Id).
+	 * 4). Driver status in the Driver table will be changed to BUSY.
+	 * 5). Return the booking status and driver details (if booking is successful)
+	 * <p>
+	 * TODO: Best way to implement this is by writing a stored procedure, which will perform step 2,3 and 4.
+	 * The procedure will fetch the nearby driver, book the cab and change the driver status as busy.
+	 * 
+	 * @param bookingRequest BookingRequest
+	 * @return BookingResponse
+	 */	
 	@Override
 	@Transactional
-	/*
-	 * 	1). Customer will send the request with Customer Name, Customer Latitude, Customer Longitude.
-		2). Nearest available driver is fetched from Driver table.
-		3). Details will be inserted in Order table (Customer Name, Customer Latitude, Customer Longitude, Order Id, Driver Id).
-		4). Driver status in the Driver table will be changed to BUSY.
-		5). Return the booking status and driver details (if booking is successful)
-		
-		TODO: Best way to implement this is by writing a stored procedure, which will perform step 2,3 and 4.
-		The procedure will fetch the nearby driver, book the cab and change the driver status as busy.
-	 * */
 	public BookingResponse bookCab(BookingRequest bookingRequest) {
 		BookingResponse bookingResponse=new BookingResponse();		
 		Driver driver=null;		
@@ -70,6 +80,15 @@ public class BookingServiceImpl implements BookingService {
 		return bookingResponse;
 	}
 	
+	/**
+	 * This method perform below operations:
+	 * 1). It will first insert the details in booking_details table.
+	 * 2). Update the status of Driver as BUSY in driver_details table.
+	 * 
+	 * @param bookingRequest BookingRequest
+	 * @param driver Driver
+	 * @return BookingResponse
+	 */	
 	@Transactional
 	public BookingResponse bookCab(BookingRequest bookingRequest, Driver driver) {
 		BookingResponse bookingResponse=new BookingResponse();
@@ -98,6 +117,13 @@ public class BookingServiceImpl implements BookingService {
 		return bookingResponse;
 	}
 
+	/**
+	 * This method fetch the nearby driver with AVAILABLE status from driver_details table and returns
+	 * the driver name.
+	 * 
+	 * @param bookingRequest BookingRequest
+	 * @return BookingResponse
+	 */	
 	@Override
 	public BookingResponse getDriverName(BookingRequest bookingRequest) {
 		BookingResponse bookingResponse=new BookingResponse();		
@@ -125,6 +151,11 @@ public class BookingServiceImpl implements BookingService {
 		return bookingResponse;
 	}
 
+	/**
+	 * Retrieve details of all the bookings.
+	 * 
+	 * @return GetAllBookingResponse
+	 */
 	@Override
 	public GetAllBookingResponse getAllBookings() {
 		logger.info("*****BookingServiceImpl: inside getAllBookings");
