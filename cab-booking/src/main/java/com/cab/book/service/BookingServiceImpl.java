@@ -38,12 +38,15 @@ public class BookingServiceImpl implements BookingService {
 		3). Details will be inserted in Order table (Customer Name, Customer Latitude, Customer Longitude, Order Id, Driver Id).
 		4). Driver status in the Driver table will be changed to BUSY.
 		5). Return the booking status and driver details (if booking is successful)
+		
+		TODO: Best way to implement this is by writing a stored procedure, which will perform step 2,3 and 4.
+		The procedure will fetch the nearby driver, book the cab and change the driver status as busy.
 	 * */
 	public BookingResponse bookCab(BookingRequest bookingRequest) {
 		BookingResponse bookingResponse=new BookingResponse();		
 		Driver driver=null;		
 		logger.info("*****BookingServiceImpl: inside bookCab(), "+bookingRequest);		
-		try {
+		try {		
 			lock.lock();
 			//get the nearest driver
 			driver = driverRepository.findNearByDriver(bookingRequest.getCustomerLatitude(),
